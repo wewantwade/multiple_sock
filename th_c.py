@@ -133,9 +133,15 @@ class MyFrame(Frame):
         self.start_exit_btn.grid(row=4,column=1)
 
     def start_send(self):
-        print(self.remote_ip_var.get(),self.remote_ports_var.get())
-        print('start.......')
-        start(self.remote_ip_var.get(),int(self.remote_ports_var.get()),self.bak_src_var.get())
+        # print(self.remote_ip_var.get(),self.remote_ports_var.get())
+        # print('start.......')
+        # start(self.remote_ip_var.get(),int(self.remote_ports_var.get()),self.bak_src_var.get())
+        host=self.remote_ip_var.get()
+        port=self.remote_ports_var.get()
+        src=self.bak_src_var.get()
+        t=threading.Thread(target=start,args=(host,int(port),src))
+        t.start()
+
 
 if __name__=='__main__':
     root=Tk()
