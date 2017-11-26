@@ -1,4 +1,4 @@
-import os
+iimport os
 import pickle
 import socket
 import threading
@@ -9,7 +9,7 @@ import struct#二进制转换模块
 #定义一个默认备份目录
 BAK_PATH='/home/funingchen/Desktop/hh/'
 SERV_RUN_FLAG=True
-flag_lock=threading.Lock()
+# flag_lock=threading.Lock()
 
 def client_operate(client):
     # 接收发送方的文件信息，包括各个文件的大小和路径
@@ -21,24 +21,27 @@ def client_operate(client):
     client.close()
 #启动服务器
 def start(host,port):
+    print('the addr:', host + ":" + str(port))
+    print('wait client connect....')
     if not os.path.exists(BAK_PATH):
         os.mkdir(BAK_PATH)
     st=socket.socket()
     st.settimeout(1)#为服务器设置超时选项，服务器启动后，如果在一秒之内客户端还没有连接上，则进入下一个循环
     st.bind((host,port))
     st.listen(1)
-    flag_lock.acquire()#获得锁，对SERV_RUN_FLAG的访问权
+    # flag_lock.acquire()#获得锁，对SERV_RUN_FLAG的访问权
     while SERV_RUN_FLAG:
-        flag_lock.release()
+        # flag_lock.release()
         client=None
         try:
             client,addr=st.accept()
+            print('already connected:',addr)
         except socket.timeout:
             pass
         if client:
             t=threading.Thread(target=client_operate,args=(client,))
             t.start()
-        flag_lock.acquire()
+        # flag_lock.acquire()
     st.close()
 
 #接收文件信息，返回文件数据
@@ -161,29 +164,30 @@ class MyFrame(Frame):
         info=info[2]
         info.append(self.local_ip)
         return info
-    def start_serv(self):
-        host=self.serv_ip.get()
-        port=int(self.serv_port.get())
+def start_serv():
+        host='0.0.0.0'
+        port=int(8881)
         serv_th=threading.Thread(target=start,args=(host,port))
         serv_th.start()
-        self.start_serv_btn.state(['disabled',])
+        # self.start_serv_btn.state(['disabled',])
         # print(self.serv_ip.get(),self.serv_port.get())
         # start(self.serv_ip.get(),int(self.serv_port.get()))
 
-class MyTk(Tk):
-    def destroy(self):
-        global SERV_RUN_FLAG
-        while True:
-            if flag_lock.acquire():
-                SERV_RUN_FLAG=False
-                flag_lock.release()
-                break
-        super().destroy()
+# class MyTk(Tk):
+#     def destroy(self):
+#         global SERV_RUN_FLAG
+#         while True:
+#             if flag_lock.acquire():
+#                 SERV_RUN_FLAG=False
+#                 flag_lock.release()
+#                 break
+#         super().destroy()
 
 if __name__=='__main__':
-    root=MyTk()
-    root.title('备份服务器')
-    # root.geometry('200x100')
-    root.resizable(True,True)#设置大小不可变
-    app=MyFrame(root)
-    app.mainloop()
+    # root=MyTk()
+    # root.title('备份服务器')
+    # # root.geometry('200x100')
+    # root.resizable(True,True)#设置大小不可变
+    # app=MyFrame(root)
+    # app.mainloop()
+    start_serv()
