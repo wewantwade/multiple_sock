@@ -1,4 +1,4 @@
-iimport os
+import os
 import pickle
 import socket
 import threading
@@ -7,7 +7,7 @@ from tkinter.ttk import *
 import struct#二进制转换模块
 
 #定义一个默认备份目录
-BAK_PATH='/home/funingchen/Desktop/hh/'
+BAK_PATH='/home/ubuntu/hh/'
 SERV_RUN_FLAG=True
 # flag_lock=threading.Lock()
 
@@ -26,7 +26,7 @@ def start(host,port):
     if not os.path.exists(BAK_PATH):
         os.mkdir(BAK_PATH)
     st=socket.socket()
-    st.settimeout(1)#为服务器设置超时选项，服务器启动后，如果在一秒之内客户端还没有连接上，则进入下一个循环
+    #st.settimeout(1)#为服务器设置超时选项，服务器启动后，如果在一秒之内客户端还没有连接上，则进入下一个循环
     st.bind((host,port))
     st.listen(1)
     # flag_lock.acquire()#获得锁，对SERV_RUN_FLAG的访问权
