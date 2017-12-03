@@ -93,8 +93,8 @@ class MyFrame(Frame):
         self.root=root
         self.grid()#网格布局
         #定义要连接的服务器IP和端口
-        self.remote_ip='127.0.0.1'
-        self.remote_port=10888
+        self.remote_ip='47.95.115.79'
+        self.remote_port=8881
         #用户要连接的ip输入框,端口输入框，备份文件的输入框
         self.remote_ip_var=StringVar()
         self.remote_ports_var=IntVar()
